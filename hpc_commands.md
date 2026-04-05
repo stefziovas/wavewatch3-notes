@@ -1,11 +1,11 @@
 # HPC & Process Management Commands
 
-1) Creating directories
+1) # Creating directories
 Purpose: Create directory trees safely (no error if they already exist).
 
 mkdir -p outputs/jan
 
-2) Linking files (symbolic links)
+2) # Linking files (symbolic links)
 Purpose: Avoid copying large files and keep consistent filenames across runs.
 
 ln -sf <source_file> <target>
