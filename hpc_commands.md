@@ -1,11 +1,11 @@
 # HPC & Process Management Commands
 
-# 1)  Creating directories
+## 1)  Creating directories
 Purpose: Create directory trees safely (no error if they already exist).
 
 mkdir -p outputs/jan
 
-# 2) Linking files (symbolic links)
+## 2) Linking files (symbolic links)
 Purpose: Avoid copying large files and keep consistent filenames across runs.
 
 ln -sf <source_file> <target>
@@ -19,17 +19,17 @@ b) ln -sf ../../mod_def.ww3 .
 
 Links mod_def.ww3 from a parent directory into the current one.
 
-# 3) Running WaveWatch III with MPI
+## 3) Running WaveWatch III with MPI
 Purpose: Run the model using multiple processors.
 
 mpirun -n 4 ./ww3_shel
 
-# 4) Running jobs offline (background execution)
+## 4) Running jobs offline (background execution)
 Purpose: Run simulations without keeping the terminal open and redirect output to a log file.
 
 nohup mpirun -n 4 ./ww3_shel &> log.ww3 &
 
-# 5) Stopping a running job
+## 5) Stopping a running job
 
 a) Check running processes
 
@@ -39,11 +39,12 @@ b) Kill a specific process
 
 kill -9 <PID>
 
-# 6) Interrupt a running program
+## 6) Interrupt a running program
+Purpose: Stop the run 
 
 Ctrl + C
 
-# 7) Fix segmentation fault due to stack size
+## 7) Fix segmentation fault due to stack size
 Purpose: Avoid forrtl: severe (174): SIGSEGV errors.
 
 ulimit -Ss unlimited
