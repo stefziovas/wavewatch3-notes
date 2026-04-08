@@ -1,9 +1,9 @@
 # Model Configuration & Namelists
 
-## 1) Source term parameterization (ww3_grid namelist)
+## Source term parameterization (ww3_grid.nml)
 
 Example configuration:
-
+```
 &SIN4
   BETAMAX = 1.55,
   Z0MAX = 0.002,
@@ -31,15 +31,14 @@ Example configuration:
   STDT = 1800.,
   FLAGTR = 4
 /
+```
+These parameters control: wind input, dissipation, nonlinear interactions, time stepping and diagnostics
 
-These parameters control:
-
-wind input, dissipation, nonlinear interactions, time stepping and diagnostics
-
-## 2) Selecting a model switch
-
+## Selecting a model switch
+```
 ./w3_setup ~/WW3-6.07.1/model/ -c ionio -s Ifremer1
-
+```
 Then compile selected programs:
-
+```
 ./w3_make ww3_grid ww3_prnc ww3_strt ww3_shel ww3_ounf ww3_ounp
+```
