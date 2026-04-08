@@ -40,6 +40,18 @@ cdo merge input_1.nc input_2.nc output.nc
 ```
 Used to merge files that have the same time steps but different variables (e.g., merging a Temperature file and a Precipitation file for the same time period).
 
+## GRIB → NetCDF conversion
+- Via cdo
+```
+cdo -f nc copy ERA5_forcing ERA5_forcing.nc
+```
+- Via xarray lib in python
+```
+import xarray as xr
+
+ds = xr.open_dataset("ERA5_forcing", engine="cfgrib")
+ds.to_netcdf("ERA5_forcing.nc")
+```
 ## Compatibility issues of the netcdf4 and hdf5 libraries
  ```
 nccopy -k classic with_correction/work/ww3_with_wnd_cor202009.nc tmp1.nc
