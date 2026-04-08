@@ -78,7 +78,8 @@ Purpose: Avoid forrtl: severe (174): SIGSEGV errors.
 ```
 ulimit -Ss unlimited
 ```
-notes: 1) ulimit -s unlimited → sets both soft and hard stack limits to unlimited (if you have permission).
+1) ulimit -s unlimited → sets both soft and hard stack limits to unlimited (if you have permission).
+
 2) ulimit -S -s unlimited → sets only the soft stack limit to unlimited (within the existing hard limit).
 
-ulimit -s unlimited on ARIS try to adjust the hard limit, which the system may forbids, and you ended up with an inadequate stack size. Using ulimit -S -s unlimited is safer and usually the recommended way on shared supercomputers.
+On hpc systems, like that of ARIS, ulimit -s unlimited try to adjust the hard limit, which the system may forbids, and you ended up with an inadequate stack size. Using ulimit -S -s unlimited is safer and usually the recommended way on shared supercomputers.
