@@ -21,7 +21,11 @@ These variables are used when NetCDF-4 is built with Parallel I/O support, typic
 ```
 unset MY_VAR
 ```
-
+## Handling library version mismatches (HDF5)
+Purpose: Suppress errors caused by incompatible HDF5 versions.
+```
+export HDF5_DISABLE_VERSION_CHECK=1
+```
 ## Environmental variables
 
 - Display environment variables: ```printenv NETCDF_CONFIG```
