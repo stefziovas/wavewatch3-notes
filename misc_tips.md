@@ -59,6 +59,11 @@ Purpose: Run simulations without keeping the terminal open and redirect output t
 ```
 nohup mpirun -n 4 ./ww3_shel &> log.ww3 &
 ```
+
+## Monitoring model output
+```
+tail log.ww3
+```
 ## Stopping a running job
 
 - Check running processes
@@ -83,3 +88,12 @@ ulimit -Ss unlimited
 2) ulimit -S -s unlimited → sets only the soft stack limit to unlimited (within the existing hard limit).
 
 On hpc systems, like that of ARIS, ulimit -s unlimited try to adjust the hard limit, which the system may forbids, and you ended up with an inadequate stack size. Using ulimit -S -s unlimited is safer and usually the recommended way on shared supercomputers.
+
+## Display the first few or last rows of a file 
+
+- ```head -n 10 FILE```
+- ```tail -n 10 FILE```
+
+## Stop a bash program if any command fails
+
+You should use in the start of any bash program ```#!/bin/bash -e```
