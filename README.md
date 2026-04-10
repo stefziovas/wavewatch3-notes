@@ -11,3 +11,10 @@ The goal is:
 - `netcdf_tools.md` – inspecting and manipulating NetCDF files
 - `wavewatch_workflow.md` – typical WW3 run logic
 - `misc_tips.md` – things that saved me hours
+
+Part of this work was presented at the **AGU Ocean Sciences Meeting 2026** (Glasgow, Scotland, 22–27 February 2026).
+
+* 🖼️ Poster presentation: [Link to poster session]
+* 📄 Full thesis: https://pergamos.lib.uoa.gr/uoa/dl/object/5362628
+
+This repository contains the analysis framework and scripts used to support the results presented in the above work.
