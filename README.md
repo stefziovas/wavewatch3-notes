@@ -14,7 +14,7 @@ The goal is:
 
 Part of this work was presented at the **AGU Ocean Sciences Meeting 2026** (Glasgow, Scotland, 22–27 February 2026).
 
-* 🖼️ Poster presentation: [Link to poster session]
+* 🖼️ Poster presentation: <a href="Poster_AGU_OSM_2026.pdf" target="_blank">View poster</a>
 * 📄 Full thesis: https://pergamos.lib.uoa.gr/uoa/dl/object/5362628
 
 This repository contains the analysis framework and scripts used to support the results presented in the above work.
