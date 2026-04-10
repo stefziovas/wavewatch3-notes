@@ -1,62 +1,64 @@
 # Running WaveWatch III on the ARIS Supercomputer
 
-1) Login & Logout
-Login: ssh aris
-Logout: exit
+## Login & Logout
+- Login: ```ssh aris```
+- Login with ncview enabled: ```ssh -X aris```
+- Logout: ```exit```
 
-2) Transferring files to and from ARIS
+## Transferring files to and from ARIS
 
 ⚠️ Important
-These commands should be executed from the Ionio server, not from ARIS itself,
-since outbound connections may be restricted on compute nodes.
+These commands should be executed from your own server, not from ARIS itself, since outbound connections may be restricted on compute nodes.
 
-a) Send files from Ionio → ARIS
-scp ERA5_forcing.nc aris:~/stefz/for-ww3-compile-ARIS/run_with_currents
-
-b) Retrieve files from ARIS → Ionio
-scp aris:~/stefz/for-ww3-compile-ARIS/run_with_currents/ERA5_forcing.nc .
-
-3) Checking project and account status
+- Send files from your local computer → ARIS
+```
+scp ERA5_forcing.nc aris:~/stefz/run_with_currents
+```
+- Retrieve files from ARIS → local computer
+```
+scp aris:~/stefz/run_with_currents/ERA5_forcing.nc .
+```
+## Checking project and account status
 
 Check available computational budget
+```
 mybudget
-
+```
 Useful to verify remaining CPU hours before submitting large jobs.
 
-4) Submitting jobs on ARIS
-
-Submit a batch job
+## Submitting jobs on ARIS
+```
 sbatch run_model.sh
-
+```
 This submits the job to the SLURM scheduler.
 
-5) Monitoring running jobs
+## Monitoring running jobs
 
-a) Check jobs for a specific user
-squeue -u sofianos
+Check jobs for a specific user
+```
+squeue -u <username>
+```
 
-b) Check all jobs on the system
-squeue
+## SLURM job submission basics
 
-6) SLURM job submission basics
-
-a) Submitting a job
+- Submitting a job
+```
 sbatch my_script.sh
-
-b) Batch script components
+```
+- Batch script components
 
 A SLURM batch script typically contains: 
 
-i) Scheduler directives: Lines beginning with #SBATCH
+1) Scheduler directives: Lines beginning with #SBATCH
 
-ii) Shell commands: Standard UNIX (bash) commands
+2) Shell commands: Standard UNIX (bash) commands
 
-iii) Job steps: Created using srun
+3) Job steps: Created using srun
 
 SLURM automatically provides environment variables such as: SLURM_JOBID, SLURM_NODELIST, SLURM_NTASKS, SLURM_CPUS_PER_TASK
 
-7) Minimal SLURM script example
-
+## Minimal SLURM script example
+```
 #!/bin/bash -l
 
 #SBATCH --job-name=slurm_env
@@ -73,29 +75,27 @@ echo "Running on $SLURM_NNODES nodes"
 echo "Tasks per node: $SLURM_NTASKS_PER_NODE"
 echo "Job ID: $SLURM_JOBID"
 echo "End at $(date)"
-
-8) Job types supported on ARIS
+```
+## Job types supported on ARIS
 
 Common runtime models include:
 
-a) Serial jobs – single-core programs
+- Serial jobs – single-core programs
 
-b) MPI jobs – multi-process parallel programs
+- MPI jobs – multi-process parallel programs
 
-c) Hybrid jobs – MPI + OpenMP
+- Hybrid jobs – MPI + OpenMP
 
-d) GPU jobs – GPU-accelerated workloads
+- GPU jobs – GPU-accelerated workloads
 
-e) PHI jobs – Intel PHI (offload mode)
+- PHI jobs – Intel PHI (offload mode)
 
-f) Multiple serial jobs – several serial programs in one script
+- Multiple serial jobs – several serial programs in one script
 
 WaveWatch III typically runs as an MPI job.
 
-9) SLURM script for running WaveWatch III on ARIS
-
-Example production script
-
+## SLURM script for running WaveWatch III on ARIS
+```
 #!/bin/bash -l
 
 ####################################
@@ -151,57 +151,5 @@ time ./ww3_prnc
 
 echo "Running main model"
 time srun -n 200 ./ww3_shel
-
-10) ## Performance & Scalability Tests
-
-Why this matters: Before launching long WaveWatch III simulations on ARIS supercomputer, it is essential to benchmark computational performance.
-
-This helps: a) optimize processor allocation, b) estimate total wall-clock time, c) avoid wasting project budget, and d)choose output frequency wisely
-
-The tests below were performed prior to the final thesis simulations.
-
-Test configuration (common to all runs)
-
-1) Model: WaveWatch III
-2) Domain: Mediterranean Sea
-3) Spatial resolution: 1/36° (~ 3km)
-4) Time step: 360 s (global)
-5) Simulation year: 2020
-6) Output frequency: 30 min – 3 h
-
-Setup: very high computational demand
-
-a) Scalability with number of processors
-
-The following tests explore how model progress scales with increasing MPI task counts for a fixed wall-clock runtime of 2 hours.
-
-Model progress achieved in 2 hours of wall time
-
-| MPI tasks | Job ID         | Output frequency | Simulated time |
-| --------: | -------------- | ---------------- | -------------- |
-|        80 | no_cur.1812994 | 30 min           | ~30 hours      |
-|       120 | no_cur.1813150 | 1 hour           | ~40 hours      |
-|       160 | no_cur.1813211 | 1 hour           | ~49 hours      |
-|       160 | no_cur.1813325 | 3 hours          | ~49.5 hours    |
-|       200 | no_cur.1813425 | 1 hour           | ~56 hours      |
-
-Key takeaway
-Scaling is positive up to ~160–200 MPI tasks, but efficiency gains begin to flatten, especially when I/O (model's input/output) load increases.
-
-b) Configuration computational cost estimates
-
-Here two different configurations were tested: with and without the inclusion of currents forcing. The tests were made for the duration of one month, in order to take a fast and reliable output for the impact of the two different experiments on the computational time. This is a common approach for planning annual or multi-year runs.
-
-Configuration	MPI tasks	Output frequency	Wall-clock time
-no currents	200	        1 hour			~15 hours
-with currents	200	        1 hour			~17 hours
-
-⚠️ Initial estimates (~10 h) were corrected after full diagnostic runs.
-
-Practical conclusions
-
-1) 200 MPI tasks offers a good balance between speed and resource usage
-2) Output frequency has a non-negligible I/O cost
-3) Including currents slightly increases computational demand
-4) Annual Mediterranean simulations at 1/36° resolution require careful scheduling
+```
 
