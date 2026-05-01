@@ -56,6 +56,7 @@ mpirun -n 4 ./ww3_shel
 ```
 ## Running jobs offline (background execution)
 Purpose: Run simulations without keeping the terminal open and redirect output to a log file.
+```nohup``` disconnects a process from the terminal on which is run, enabling you to close the connection while the calculation continues to go on.
 ```
 nohup mpirun -n 4 ./ww3_shel &> log.ww3 &
 ```
