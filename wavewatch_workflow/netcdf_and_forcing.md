@@ -100,7 +100,18 @@ ds_1
 ```
 ## Editing calendar and time units
 WaveWatch III (ww3_prnc) requires properly formatted input data, particularly regarding metadata and attributes.
-If errors related to calendar or time units occur, the dataset may need to be corrected accordingly. 
+If errors related to calendar or time units occur, the dataset may need to be corrected accordingly. The typical error that WW3 shows when the time format of a forcing is off, is the following:
+```
+*** WAVEWATCH III ERROR IN W3TIMEMD :
+PREMATURE END OF TIME ATTRIBUTE
+hours since 2001-12-07 00:00:00
+DIFFERS FROM CONVENTIONS ISO8601
+XXX since YYYY-MM-DD hh:mm:ss
+XXX since YYYY-M-D h:m:s
+XXX since YYYY-M-D hh:mm:ss
+```
+In order to fix it, we usually use something like the following two commands:
+
 ```
 ncatted -h -a calendar,time,c,c,'standard' wind.nc
 ncatted -h -a units,time,o,c,'hours since 1900-01-01T00:00:00Z' wind.nc
@@ -109,6 +120,64 @@ ncatted -h -a units,time,o,c,'hours since 1900-01-01T00:00:00Z' wind.nc
 ```
 cdo sinfo wind.nc
 ```
+
+**Caution**: When you type ```ncatted -h -a units,time,o,c,'seconds since 1970-01-01T00:00:00Z' wind.nc```, everything works good and ww3_prnc run without a problem. But, when you change seconds in hours (```ncatted -h -a units,time,o,c,'hours since 1970-01-01T00:00:00Z' wind.nc```), you will get non sense dates in the ```cdo sinfo wind.nc```, like  ```116925-12-15 00:00:00``` 
+
+Why is this happening and how this command actually works, so you can use it properly ?
+
+**Anwser**: The reason you got that futuristic date is because ncatted is just a text editor. It only changes the label (the attribute) and does not touch the actual numbers stored inside the file. Let's assume the actual numeric value stored in your time variable is 1,000,000,000.
+
+- First case (seconds):
+1. The stored number is 1,000,000,000.
+2. CDO reads your label: ```seconds since 1970```
+3. It does the math: 1,000,000,000 \60 \60 \24 ~ 11,574 days.
+4. It adds 11,574 days to the year 1970, correctly putting you in the year 2001.
+
+- Second case (hours):
+1. The stored number is still exactly 1,000,000,000.
+2. But you changed the label to: ```hours since 1970```
+3. Now CDO thinks that number represents hours!
+4. It does the math: 1,000,000,000 \24 ~ 41,666,666 days.
+5. It adds 41.6 million days to the year 1970, launching you straight to the year 116925!
+
+NetCDF files do not store dates as calendar strings like ```2001-12-07```. Instead, they store two separate things:
+a) The Values (Numbers): A list of pure numbers (e.g., 100, 101, 102).
+b) The Units (Attributes): A text string acting as a rule (e.g., hours since 1970-01-01).
+
+When you open a netcdf with ```CDO```, it takes the numbers, applies the text rule as a mathematical formula, and calculates the human-readable date on the fly.
+With ```ncatted``` you are only changing the text rule. If your numbers were calculated as seconds, and you relabel them as hours, the dates will break.
+
+If you want to switch your file from seconds to hours without breaking the dates, you must divide the numeric time values by 3600 AND change the label. You can do both in a single step using the ncap2 tool :
+
+```ncap2 -s 'time=time/3600' -s 'time@units="hours since 1970-01-01T00:00:00Z"' test.nc test_hours.nc```
+
+**Best practice** 
+
+First you check the time format of the data you working with via cdo sinfo (e.g. ```cdo sinfo wind.nc --> RefTime =  1970-01-01 00:00:00  Units = seconds  Calendar = proleptic_gregorian```). After that, for safety reasons, you copy your data file to a ```test.nc``` file, and then, you adjust your ncatted command to the units of your working file (e.g. ```ncatted -h -a units,time,o,c,'seconds since 1970-01-01T00:00:00Z' test.nc```) or if you want to change the time label, for example from seconds to hours, you do: ```ncap2 -s 'time=time/3600' -s 'time@units="hours since 1970-01-01T00:00:00Z"' test.nc test_hours.nc```
+
+***note***: it is no need to change the reference time of your data to the actual date (e.g. the first date of your data, e.g. 07/12/2001). The netcdf is formated in that way, in which ww3_prnc read the actual date of your data.
+
+***About the actual commands***
+
+- The command ```ncatted -h -a units,time,o,c,'seconds since 1970-01-01T00:00:00Z' test.nc``` is used to overwrite or create the units attribute for the time variable in a NetCDF file.Here is the breakdown of each part of the command:
+1. ```ncatted```: This is the netCDF Attribute Editor from the NCO (netCDF Operators) suite.
+2. ```-h```: Prevents the command from adding itself to the global history attribute of the NetCDF file.
+3. ```-a```: Flag indicating that an attribute modification follows. The arguments following it are typically structured as att_nm,var_nm,mode,att_typ,att_val.
+4. ```units```: The name of the attribute being modified (e.g., units, long_name).
+5. ```time```: The name of the variable to which the attribute belongs.
+6. ```o``` (mode): Specifies the overwrite mode. If the attribute already exists, it is updated; if not, it is created.
+7. ```c``` (type): Specifies the attribute type as character (string).
+8. ```'seconds since 1970-01-01T00:00:00Z'```: The actual value being assigned to the units attribute.
+9. ```test.nc```: The target input NetCDF file to be modified
+
+- The command ```ncap2 -s 'time=time/3600' -s 'time@units="hours since 1970-01-01T00:00:00Z"' test.nc test_hours.nc``` converts the time variable from seconds to hours and updates the corresponding units attribute.Here is the breakdown of each part of the command:
+1. ```ncap2```: This is the netCDF Arithmetic Processor from the NCO suite, used for processing and manipulating data with scripts.
+2. ```-s```: The script flag. It tells the operator that the following quoted string is a command to be executed. You can use multiple -s flags to chain operations.
+3. ```'time=time/3600'```: The first operation. It divides every value in the time variable by \(3600\) (converting seconds to hours) and overwrites the time variable with these new values.
+4. ```'time@units="hours since 1970-01-01T00:00:00Z'"```: The second operation. The @ symbol denotes an attribute in ncap2. This line changes the units attribute of the time variable to match the new hourly data.
+5. ```test.nc```: The input NetCDF file containing the original data.
+6. ```test_hours.nc```: The output NetCDF file where the modified data will be saved.
+
 ## Reordering latitude and longitude dimensions
 If the data coordinates are not aligned with the model grid, they can be rearranged as needed.
 ```
