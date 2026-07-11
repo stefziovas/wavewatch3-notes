@@ -39,6 +39,11 @@ Check jobs for a specific user
 squeue -u <username>
 ```
 
+## Cancelling a running job
+```
+scancel <job-id>
+```
+
 ## SLURM job submission basics
 
 - Batch script components
