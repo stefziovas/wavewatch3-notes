@@ -66,8 +66,8 @@ SLURM automatically provides environment variables such as: SLURM_JOBID, SLURM_N
 #SBATCH --ntasks-per-node=12
 #SBATCH --mem-per-cpu=1024
 #SBATCH --time=00:01:00
-#SBATCH --error=job.%J.out
-#SBATCH --output=job.%J.out
+#SBATCH --error=%x.%J.out
+#SBATCH --output=%x.%J.out
 
 echo "Start at $(date)"
 echo "Running on hosts: $SLURM_NODELIST"
@@ -91,8 +91,6 @@ Common runtime models include:
 - PHI jobs – Intel PHI (offload mode)
 
 - Multiple serial jobs – several serial programs in one script
-
-WaveWatch III typically runs as an MPI job.
 
 ## SLURM script for running WaveWatch III on ARIS
 ```
@@ -138,7 +136,8 @@ module load intel/18.0.1 \
 export LD_LIBRARY_PATH=$NETCDF/lib:$HDF5/lib:$JASPERLIB:$LD_LIBRARY_PATH
 
 # Run WaveWatch III
-cd /users/pa006/sofianos/stefz/run_no_currents
+WORKDIR=$(pwd)
+cd $WORKDIR
 
 echo "Running grid"
 time ./ww3_grid
