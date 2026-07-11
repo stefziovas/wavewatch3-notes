@@ -19,6 +19,19 @@ scp ERA5_forcing.nc hpc-login:~/stefz/run_with_currents
 scp hpc-login:~/stefz/run_with_currents/ERA5_forcing.nc .
 ```
 
+## Loading modules
+- Load modules
+```
+module load cdo nco ncview python3 
+```
+- Search available modules and their versions  
+```
+module avail cdo 
+```
+```
+module spider cdo
+```
+
 ## Submitting jobs on ECMWF
 ```
 sbatch run_model.sh
