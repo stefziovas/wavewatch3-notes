@@ -1,19 +1,23 @@
 ## About nodes, CPUs and cores
 
-A single compute node in a cluster typically contains multiple high-performance CPUs, often combined with RAM and GPUs, making it a powerful computer in its own right. 
-While one node can be a "complex" of multiple processor chips and hundreds of cores, it acts as a single, cohesive unit of computation (a "node") within a larger HPC cluster. 
-Each CPU chip contains multiple cores (e.g., 32+ cores per CPU), allowing the node to process hundreds of threads simultaneously. All cores on a single node share a common pool of RAM.
+A single compute node in a cluster typically contains multiple high-performance CPUs, making it a powerful computer in its own right. 
+While one node can be a "complex" of multiple processor cores, it acts as a single, cohesive unit of computation (a "node") within a larger HPC cluster. 
+Each node can be divided into sockets, which contain multiple cores (e.g. 2 sockets per node with 64 cpus per socket, thus 128 cpus per node), allowing the node to process hundreds of threads simultaneously. All cores on a single node share a common pool of RAM.
 
 - Node: The complete physical machine (the "box").
-- CPU (Processor): The physical chip you install in a socket (one node may have 2 CPUs).
-- Core: The independent processing unit inside a CPU chip (one CPU may have 64 cores).
+- Cpus: The independent processing units inside each node.
 
 ## About MPI and OpenMP
 
 The main difference between MPI (Message Passing Interface) and OpenMP (Open Multi-Processing) lies in how they handle memory and how the different processors communicate with each other:
 
-- OpenMP (Shared Memory): All processors (threads) share a single memory space. They can see and modify the same variables directly. It is designed for multi-core CPUs within a single machine.
-- MPI (Distributed Memory): Each processor (process) has its own private memory. One process cannot see another's data directly. It is designed to run across multiple computers connected in a network (a cluster).
+- MPI (Distributed Memory): Each processor (process) has its own private memory. One process cannot see another's data directly. It is designed for cases where different cpus neeed to communicate with each other. A characteristic example could be NEMO, where each processor is responsible for a specific region in the domain, and needs to communicate with others cpus that govern neighbour regions, in order to calculate in a proper way its variables and exchanges in its boundaries (halo points). 
+
+- OpenMP (Shared Memory): All processors (threads) share a single memory space. They can see and modify the same variables directly. It is designed for cases where memory is the bound factor in perfomance. For example, we can give the process during the propagation step in WaveWatch, where each mpi core has to "put aside" its local spectrum computations, gather spectrum data from other cpus, solve spatial propagation matrix, return data to their mother cpus, and finally get back to its local spcetal calculations. This example shows the importance of a hubrid MPI-OPENMP configuration in WaveWatch for perfomance goals.   
+
+<p align="center">
+<img width="226" height="287" alt="Screenshot from 2026-05-27 11-27-24" src="https://github.com/user-attachments/assets/9ffa6f01-6c4d-46d6-b83d-79d56af7a345" />
+</p>
 
 ## What is the difference between modules, libraries and compilers ?
 
@@ -41,15 +45,15 @@ Analogy: A compiler is the translator who takes a book written in English and tr
 
 - Check installed compilers and versions: ```dpkg --list | grep compiler```
 
-- list all available compilers that can be installed:
+- List all available compilers that can be installed:
 1) ```apt-cache search Compiler```
 2) ```apt-cache search Compiler | grep -i --color fortran```
 
 - Install compiler: ```sudo apt-get install gfortran```
 
-```sudo``` command gives you global permission
+```sudo``` command gives you global permission, if you have an administrator role.
 
-- found location & version of compilers:
+- Found location & version of compilers (e.g. gcc):
 1) ```whereis gcc```
 2) ```which gcc```
 3) ```gcc --version```
@@ -67,5 +71,4 @@ Purpose: Verify which system libraries an executable is linked against (useful f
 
 ```ldd ww3_shel```
 
-You can also use: nc-config --prefix
 
