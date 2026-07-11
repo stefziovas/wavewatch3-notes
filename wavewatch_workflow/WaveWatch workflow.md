@@ -1,4 +1,4 @@
-# Workflows & Comparing Configurations
+# WaveWatch workflow
 
 ## Standard execution order
 
