@@ -41,10 +41,6 @@ squeue -u <username>
 
 ## SLURM job submission basics
 
-- Submitting a job
-```
-sbatch my_script.sh
-```
 - Batch script components
 
 A SLURM batch script typically contains: 
