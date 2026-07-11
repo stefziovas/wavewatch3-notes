@@ -58,3 +58,35 @@ Navigate to the test case directory. Read instructions:
 cat info
 ```
 Run ```run_test``` with selected options. Outputs appear in the work directory. 
+
+## Example of tuning physical parameterization coefficients in namelists.nml 
+```
+&SIN4
+  BETAMAX = 1.55,
+  Z0MAX = 0.002,
+  TAUWSHELTER = 0.0,
+  SWELLF3 = 0.015,
+  SWELLF4 = 1.0E5,
+  SWELLF7 = 0.0
+/
+
+&SDS4
+  SDSBCHOICE = 1,
+  FXFM3 = 2.5,
+  SDSBR = 0.00085,
+  SDSCUM = 0.0,
+  SDSCOS = 0.0
+/
+
+&SNL1
+  NLPROP = 2.7E7
+/
+
+&MISC
+  STDX = 11.2,
+  STDY = 11.2,
+  STDT = 1800.,
+  FLAGTR = 4
+/
+```
+These parameters control: wind input, dissipation, nonlinear interactions, time stepping and diagnostics
