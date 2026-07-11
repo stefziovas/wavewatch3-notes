@@ -22,11 +22,15 @@ ssh -X aris # for a connection with enabled ncview option in ARIS hpc system
 ```
 cdo sinfo <file_name>
 ```
-Shows informations and stats (max, min and mean values) for each variable in netcdf.
+Shows useful information and dates covered by the netcdf.
+```
+cdo sinfon <file_name>
+```
+Shows useful information and stats (max, min and mean values) for each variable in netcdf.
 ```
 ncdump -v <variable> <file_name>
 ```
-Shows useful informations and the values of the desired variable at each index (e.g. ```ncdump -v longitude MED36_dom.nc``` shows longitude values at each grid point of the domain. 
+Shows useful information and the values of the desired variable at each index (e.g. ```ncdump -v longitude MED36_dom.nc``` shows longitude values at each grid point of the domain. 
 ```
 cdo showname <file_name>
 ```
