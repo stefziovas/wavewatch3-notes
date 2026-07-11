@@ -1,12 +1,12 @@
 # 🌊 wavewatch3-notes
-This repository contains practical commands and workflows I used during my MSc thesis for running WaveWatch III simulations on HPC systems. The goal is to serve as a future reference for myself and others.
+This repository contains practical commands and workflows I used during for running WaveWatch III simulations on HPC systems. The goal is to serve as a future reference for myself and others.
 
 ## Contents
-- `wavewatch_workflow.md` – typical WW3 run logic
-- `Post-Processing Analysis (Python)` - python scripts for analysis and validation of results
-- `File_editing.md` - useful editing practises
-- `netcdf_tools.md` – inspecting and manipulating NetCDF files
-- `misc_tips.md` – miscalleneous tips for several 
+- `wavewatch_workflow.md` – Typical WW3 run logic
+- `Post-Processing Analysis (Python)` - Python scripts for analysis and validation of results
+- `File_editing.md` - Useful editing practises
+- `netcdf_tools.md` – Inspecting and manipulating NetCDF files
+- `misc_tips.md` – Miscalleneous tips 
 
 Part of this work was presented at the **AGU Ocean Sciences Meeting 2026** (Glasgow, Scotland, 22–27 February 2026).
 
