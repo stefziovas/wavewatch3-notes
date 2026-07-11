@@ -1,6 +1,6 @@
 ## NETCDF environmental variables
 
-These environment variables are primarily used when building or installing software that depends on the NetCDF-4 C library. They tell the build system (like setup.py or a Makefile) exactly where to find the library files and headers
+These environmental variables are primarily used when building or installing software that depends on the NetCDF-4 C library. They tell the build system (like setup.py or a Makefile) exactly where to find the library files and headers
 
 1) Standard NetCDF-4 Variables
 
@@ -17,23 +17,15 @@ These variables are used when NetCDF-4 is built with Parallel I/O support, typic
 - NETCDF4_PARALLEL_LIB: The library directory for the parallel version.
 - NETCDF4_PARALLEL_VERSION: The version number for the parallel implementation.
 
-## how to delete a environment variable
-```
-unset MY_VAR
-```
-## Handling library version mismatches (HDF5)
-Purpose: Suppress errors caused by incompatible HDF5 versions.
-```
-export HDF5_DISABLE_VERSION_CHECK=1
-```
 ## Environmental variables
 
-- Display environment variables: ```printenv NETCDF_CONFIG```
-- Display environment variables: ```echo $NETCDF_CONFIG```
+- Display environmental variables: ```echo $NETCDF_CONFIG```
+- Display environmental variables: ```printenv $NETCDF_CONFIG```
+- Delete an environmental variable: ```unset $MY_VAR```
 
 ## On nc-config and nf-config files
 
-Since version 4.2, the NetCDF libraries for C and Fortran have been split into separate packages. While nc-config is the utility for the C library, nf-config is the dedicated tool for the Fortran library. nf-config --fc specifically reports the Fortran compiler used to build your NetCDF-Fortran library, ensuring compatibility, while nc-config often returns a blank for --fc because it may not be able to find the path to the Fortran utility or was not configured to "talk" to it during installation. 
+Since version 4.2, the NetCDF libraries for C and Fortran have been split into separate packages. While ```nc-config``` is the utility for the C library, ```nf-config``` is the dedicated tool for the Fortran library. ```nf-config --fc``` specifically reports the Fortran compiler used to build your NetCDF-Fortran library, ensuring compatibility, while ```nc-config``` often returns a blank for ```--fc```, because it may not be able to find the path to the Fortran utility or was not configured to "talk" to it during installation. 
 
 Depending on your environment variables, you may need to use these direct versions:
 
