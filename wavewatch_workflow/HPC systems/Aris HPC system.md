@@ -1,4 +1,4 @@
-# Running WaveWatch III on the ARIS Supercomputer
+# Running WaveWatch III on ARIS HPC system
 
 ## Login & Logout
 - Login: ```ssh aris```
