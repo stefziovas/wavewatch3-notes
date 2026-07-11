@@ -3,7 +3,7 @@
 WaveWatch III requires at minimum wind forcing, while surface currents are also commonly used due to their significant impact on wave evolution. Here, we outline a typical workflow for downloading data from ERA5 and CMEMS services, along with basic commands for properly incorporating these datasets into WW3 as forcings.
 For both sources, Python can be used (see python analysis/forcing_template.ipynb), while CMEMS data can additionally be downloaded via a bash script. 
 
-## How to download CMEMS data
+## Download CMEMS data
 
 1) Install CMEMS services for download data: ```pip install copernicusmarine```
 2) Create a login script to avoid entering your credentials repeatedly: ```touch login.sh``` Edit your login file ```vi login.sh``` and type:
@@ -36,7 +36,7 @@ copernicusmarine.subset(
 ```
 7) Run ```bash download_data.sh``` to download data
 
-## How to download ERA5 data
+## Download ERA5 data
 
 1) Create a CDS API configuration file:: ```vi ~/.cdsapirc``` and then insert your API key.:
 ```
